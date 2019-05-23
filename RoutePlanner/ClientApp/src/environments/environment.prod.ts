@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: false,
+  host: 'https://api',
+  anyList: 'any/list'
 };
