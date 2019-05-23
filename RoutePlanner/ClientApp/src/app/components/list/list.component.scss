@@ -1,0 +1,35 @@
+.list {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-bottom: 3rem; 
+
+  &__element {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    border-bottom: 0.1rem solid #00b050;
+    margin: 0 4rem 4rem 4rem;
+    height: 3rem;
+
+    &_burger {
+      width: 5%;
+      background: #f2f2f2;
+      margin-bottom: 1rem;
+    }
+      
+    &_title {
+      width: 75%;
+      margin-bottom: 1rem;
+    }
+      
+
+    &_button-delete{
+      width: 5%;
+      background: white;
+      margin-bottom: 1rem;
+      border: none;
+    } 
+  }
+}

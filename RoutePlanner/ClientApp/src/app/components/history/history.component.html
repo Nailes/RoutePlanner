@@ -1,0 +1,27 @@
+<body>
+    <div class="top-menu">
+      <button  class="top-menu__history">история</button>
+      <button routerLink="/menu" class="top-menu__new-map">Создание маршрута</button>
+      <button class="top-menu__photo">
+          <img src="assets/img/profile.png" height="35">
+      </button>
+    </div>
+
+    <div class="add">
+        <input class="add__input" placeholder="Поиск">
+        <button class="add__icon">
+            <img src="assets/img/calendar.png" height="35">
+        </button>  
+        <button class="add__add">Найти</button>
+    </div>
+
+    <div class="main">
+        <app-list *ngFor="let l of list"
+        [list] = "l"
+        ></app-list>
+        
+    </div>
+    <div class="footer"></div>
+
+</body>
+
