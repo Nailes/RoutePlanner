@@ -16,4 +16,7 @@ export class HttpService {
   public get(route: string) {
     return this.http.get(this.host + route);
   }
+  public post(route: string, body) {
+    return this.http.post(this.host + route, body);
+  }
 }
