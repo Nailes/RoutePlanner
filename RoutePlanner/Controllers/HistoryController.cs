@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RoutePlanner;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RoutePlanner.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("api")]
     [ApiController]
     public class HistoryController : ControllerBase
     {
@@ -20,106 +18,35 @@ namespace RoutePlanner.Controllers
             _context = context;
         }
 
-        // GET: api/History
-        [HttpGet]
-        public IEnumerable<Routes> GetRoutes()
-        {
-            return _context.Routes;
-        }
-
-        // GET: api/History/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRoutes([FromRoute] int id)
+        // GET: api/History?id=1
+        //[AllowAnonymous]
+        [HttpGet("History")]
+        public IActionResult GetHistory(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var routes = await _context.Routes.FindAsync(id);
+            var route = _context.Routes.Where(x => x.IdUser == id).Select(c => new { id = c.IdUser, title = c.Title, date = c.DateRoutes });
 
-            if (routes == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(routes);
+            return Ok(route);
         }
 
-        // PUT: api/History/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoutes([FromRoute] int id, [FromBody] Routes routes)
+        // GET: api/Search?id=1"&"name=test4"&"date=2017-01-21T00:00:00
+        //[AllowAnonymous]
+        [HttpGet("Search")]
+        public IActionResult Search(int id, string name = "", DateTime? date = null)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            
+            var route = _context.Routes.Where(x => x.IdUser == id && EF.Functions.Like(x.Title, "%%".Insert(1, name)) && EF.Functions.Like(x.DateRoutes.ToString(), "%%".Insert(1, date.ToString())))
+            .Select(c => new { id = c.IdUser, title = c.Title, date = c.DateRoutes });
 
-            if (id != routes.IdRoutes)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(routes).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoutesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/History
-        [HttpPost]
-        public async Task<IActionResult> PostRoutes([FromBody] Routes routes)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Routes.Add(routes);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRoutes", new { id = routes.IdRoutes }, routes);
-        }
-
-        // DELETE: api/History/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoutes([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var routes = await _context.Routes.FindAsync(id);
-            if (routes == null)
-            {
-                return NotFound();
-            }
-
-            _context.Routes.Remove(routes);
-            await _context.SaveChangesAsync();
-
-            return Ok(routes);
-        }
-
-        private bool RoutesExists(int id)
-        {
-            return _context.Routes.Any(e => e.IdRoutes == id);
-        }
+            return Ok(route);
+        }        
     }
 }
