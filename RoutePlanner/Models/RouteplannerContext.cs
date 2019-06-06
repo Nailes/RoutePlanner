@@ -17,6 +17,7 @@ namespace RoutePlanner
         public virtual DbSet<Routes> Routes { get; set; }
         public virtual DbSet<Stage> Stage { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Create> Create { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

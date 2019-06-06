@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,17 +19,15 @@ namespace RoutePlanner.Controllers
             _context = context;
         }
 
-        // GET: api/Users
-        //[AllowAnonymous]
         [HttpGet("InfoUser")]
-        public IActionResult GetUser(int id)
+        public IActionResult GetUser(int idUser)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Users user = _context.Users.FirstOrDefault(x => x.IdUser == id);
+            Users user = _context.Users.FirstOrDefault(x => x.IdUser == idUser);
 
             if (user == null)
             {
@@ -48,17 +44,15 @@ namespace RoutePlanner.Controllers
             return Ok(response);
         }
 
-        // PUT: api/EditUser?id=1 -Body(@{Login = "user1"; Pass = "123"; Email = "sdcsd@dsd.com";})
-        //[AllowAnonymous]
         [HttpPut("EditUser")]
-        public async Task<IActionResult> EditUser(int id, [FromBody] Users data)
+        public async Task<IActionResult> EditUser(int idUser, Users data)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Users user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == id);
+            Users user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == idUser);
 
             if (user == null)
             {

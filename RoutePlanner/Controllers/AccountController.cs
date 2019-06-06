@@ -24,7 +24,6 @@ namespace RoutePlanner.Controllers
             _context = context;
         }
 
-        // POST: api/Signin?Login=user1"&"Pass=123
         [AllowAnonymous]
         [HttpPost("Signin")]
         public async Task Login(Users data)
@@ -60,12 +59,11 @@ namespace RoutePlanner.Controllers
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        // POST: api/Signin?Login=user1"&"Pass=123"&"Email=dscsd@ds.com
         [AllowAnonymous]
         [HttpPost("Signup")]
-        public async Task<IActionResult> Register(Users user)
+        public async Task<IActionResult> Register(Users data)
         {
-            Users users = _context.Users.FirstOrDefault(x => x.Login == user.Login && x.Email == user.Email);
+            Users users = _context.Users.FirstOrDefault(x => x.Login == data.Login && x.Email == data.Email);
             if (users == null)
             {
                 if (!ModelState.IsValid)
@@ -73,7 +71,7 @@ namespace RoutePlanner.Controllers
                     return StatusCode(400);
                 }
 
-                _context.Users.Add(user);
+                _context.Users.Add(data);
                 await _context.SaveChangesAsync();
                 return Ok();
             }
