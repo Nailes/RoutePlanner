@@ -20,14 +20,14 @@ namespace RoutePlanner.Controllers
         }
 
         [HttpGet("InfoUser")]
-        public IActionResult GetUser(int idUser)
+        public IActionResult GetUser(int IdUser)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Users user = _context.Users.FirstOrDefault(x => x.IdUser == idUser);
+            Users user = _context.Users.FirstOrDefault(x => x.IdUser == IdUser);
 
             if (user == null)
             {
@@ -45,14 +45,14 @@ namespace RoutePlanner.Controllers
         }
 
         [HttpPut("EditUser")]
-        public async Task<IActionResult> EditUser(int idUser, Users data)
+        public async Task<IActionResult> EditUser(int IdUser, Users data)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Users user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == idUser);
+            Users user = await _context.Users.FirstOrDefaultAsync(x => x.IdUser == IdUser);
 
             if (user == null)
             {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RoutePlanner;
 using Microsoft.AspNetCore.Authorization;
 
 namespace RoutePlanner.Controllers
@@ -23,19 +19,19 @@ namespace RoutePlanner.Controllers
         }
 
         [HttpGet("Route")]
-        public IActionResult GetRoute(int idRoute)
+        public IActionResult GetRoute(int IdRoute)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var route = _context.Routes.Where(x => x.IdRoutes == idRoute)
+            var route = _context.Routes.Where(x => x.IdRoutes == IdRoute)
             .Select(c => new
             {
                 title = c.Title,
                 date = c.DateRoutes,
-                stage = c.Stage.Where(a => a.IdRoutes == idRoute)
+                stage = c.Stage.Where(a => a.IdRoutes == IdRoute)
             .Select(b => new
             {
                 id = b.IdStage,
@@ -58,14 +54,14 @@ namespace RoutePlanner.Controllers
         }
 
         [HttpDelete("DeleteStage")]
-        public async Task<IActionResult> DeleteStage(int idStage)
+        public async Task<IActionResult> DeleteStage(int IdStage)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var stage = await _context.Stage.FindAsync(idStage);
+            var stage = await _context.Stage.FindAsync(IdStage);
 
             if (stage == null)
             {
@@ -73,20 +69,20 @@ namespace RoutePlanner.Controllers
             }
 
             _context.Stage.Remove(stage);
-            await _context.SaveChangesAsync();        
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpDelete("DeleteComments")]
-        public async Task<IActionResult> DeleteComments(int idComments)
+        public async Task<IActionResult> DeleteComments(int IdComments)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var comment = await _context.Comments.FindAsync(idComments);
+            var comment = await _context.Comments.FindAsync(IdComments);
             if (comment == null)
             {
                 return NotFound();
@@ -98,203 +94,117 @@ namespace RoutePlanner.Controllers
             return Ok();
         }
 
-
-        //Пока не работает
-        [AllowAnonymous]
         [HttpPost("Save")]
-        public IActionResult SaveRoute(int IdUser, [FromBody] Create data)
+        public IActionResult SaveRoute(int IdUser, Routes route)
         {
-            if (!ModelState.IsValid)
+            Routes dataRoute = new Routes
             {
-                return StatusCode(415);
+                IdUser = IdUser,
+                Title = route.Title,
+                DateRoutes = route.DateRoutes
+            };
+            _context.Routes.Add(dataRoute);
+
+            foreach (var i in route.Stage)
+            {
+                Stage dataStage = new Stage
+                {
+                    IdRoutes = dataRoute.IdRoutes,
+                    Place = i.Place,
+                    DateStage = i.DateStage
+                };
+                _context.Stage.Add(dataStage);
+
+                foreach (var j in i.Comments)
+                {
+                    Comments dataComments = new Comments
+                    {
+                        IdStage = dataStage.IdStage,
+                        Note = j.Note,
+                        DateNote = j.DateNote
+                    };
+                    _context.Comments.Add(dataComments);
+                }
             }
+
+            _context.SaveChanges();
             return Ok();
-
-
-
-            //List<Create> test = new<Create> 
-            //    {
-            //        IdUser = 1,
-            //        Title = "test5",
-            //        DateRoutes = "2017-01-29T00:00:00",
-            //        //Stage = new
-            //        //{
-            //        //        Place = "sdcsd",
-            //        //        DateStage = "2017-01-29T00:00:00",
-            //        //        Comments = new
-            //        //        {
-            //        //            Note = "ssdds",
-            //        //            DateNote = "2017-01-29T00:00:00"
-            //        //        }
-            //        //}
-            //    };
-
-            //_context.Create.Add(test);
-            //return Ok(1);
-       //     dataRoutes.IdUser = IdUser;
-       //     _context.Routes.Add(dataRoutes);
-       //     _context.SaveChanges();
-
-
-
-       //     dataStage.IdRoutes = dataRoutes.IdRoutes;
-       //     _context.Stage.Add(dataStage);
-       //     _context.SaveChanges();
-       //     Stage stage = _context.Stage.Where(c => c.IdRoutes == IdUser)
-       //         .FirstOrDefault();
-       //     if (stage == null)
-       //     { return StatusCode(416); }
-
-       //     _context.Stage.Load();
-
-       //     data.IdRoutes = IdUser;
-       //     _context.Stage.Add(data);
-       //     _context.SaveChanges();
-
-
-
-       //     Customer ivan = context.Customers
-       //.Where(c => c.LastName == "Иванов")
-       //.FirstOrDefault();
-
-       //     // Создаем заказ
-       //     Order order = new Order
-       //     {
-       //         ProductName = "Яблоки",
-       //         Quantity = 5,
-       //         PurchaseDate = DateTime.Now,
-       //         // Ссылка на покупателя в навигационном свойстве
-       //         Customer = ivan
-       //     };
-
-       //     context.Orders.Add(order);
-
-       //     context.SaveChanges();
-
         }
 
-            //Routes validate = _context.Routes.FirstOrDefault(x => x.IdUser == idUser && x.Title == data.Route.Title && x.DateRoutes == data.Route.DateRoutes);
-            ////Users user = _context.Users.FirstOrDefault(x => x.Login == data.Login && x.Pass == data.Pass);
-            //if (validate != null)
-            //{
-            //    foreach (var i in data.Stage)
-            //    {
-            //        i.IdRoutes = validate.IdRoutes;
-            //        _context.Stage.Add(i);
-            //    }
-            //    _context.SaveChanges();
+        [HttpPut("EditRoute")]
+        public async Task<IActionResult> EditRoute(int IdRoute, Routes data)
+        {
+            Routes route = await _context.Routes.FirstOrDefaultAsync(x => x.IdRoutes == IdRoute);
 
-            //    //List<Stage> validateStage = _context.Stage.FirstOrDefault(x => x.IdRoutes == validate.IdRoutes && x.Title == data.Route.Title && x.DateRoutes == data.Route.DateRoutes);
+            if (route == null)
+            {
+                return BadRequest(ModelState);
+            }
 
-            //    //foreach (var i in data.Comment)
-            //    //{
-            //    //    i.IdStage = validate.IdRoutes;
-            //    //    _context.Stage.Add(i);
-            //    //}
-            //    //_context.SaveChanges();
+            if (data.Title != null && data.Title != "")
+            {
+                route.Title = data.Title;
+            }
+            if (data.DateRoutes != null)
+            {
+                route.DateRoutes = data.DateRoutes;
+            }
 
-            //}
+            _context.Stage.Where(p => p.IdRoutes == route.IdRoutes).Load();
+            int countI = 0;            
+            foreach (var i in route.Stage)
+            {
+                if (i.IdRoutes == IdRoute)
+                {
+                    int countP = 0;
+                    int countQ = 0;
+                    foreach (var p in data.Stage)
+                    {                        
+                        if (countI == countP)
+                        {
+                            if (p.Place != null && p.Place != "")
+                            {
+                                i.Place = p.Place;
+                            }
+                            if (p.DateStage != null)
+                            {
+                                i.DateStage = p.DateStage;
+                            }
+                            _context.Comments.Where(x => x.IdStage == i.IdStage).Load();
+                            int countJ = 0;
 
-            //    return Ok();
-            //}
-
-
-
-
-
-            // GET: api/SaveRoute/5
-            //[HttpGet("{id}")]
-            //public async Task<IActionResult> GetRoutes([FromRoute] int id)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    var routes = await _context.Routes.FindAsync(id);
-
-            //    if (routes == null)
-            //    {
-            //        return NotFound();
-            //    }
-
-            //    return Ok(routes);
-            //}
-
-            //// PUT: api/SaveRoute/5
-            //[HttpPut("{id}")]
-            //public async Task<IActionResult> PutRoutes([FromRoute] int id, [FromBody] Routes routes)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    if (id != routes.IdRoutes)
-            //    {
-            //        return BadRequest();
-            //    }
-
-            //    _context.Entry(routes).State = EntityState.Modified;
-
-            //    try
-            //    {
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!RoutesExists(id))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-
-            //    return NoContent();
-            //}
-
-            //// POST: api/SaveRoute
-            //[HttpPost]
-            //public async Task<IActionResult> PostRoutes([FromBody] Routes routes)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    _context.Routes.Add(routes);
-            //    await _context.SaveChangesAsync();
-
-            //    return CreatedAtAction("GetRoutes", new { id = routes.IdRoutes }, routes);
-            //}
-
-            //// DELETE: api/SaveRoute/5
-            //[HttpDelete("{id}")]
-            //public async Task<IActionResult> DeleteRoutes([FromRoute] int id)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    var routes = await _context.Routes.FindAsync(id);
-            //    if (routes == null)
-            //    {
-            //        return NotFound();
-            //    }
-
-            //    _context.Routes.Remove(routes);
-            //    await _context.SaveChangesAsync();
-
-            //    return Ok(routes);
-            //}
-
-            //private bool RoutesExists(int id)
-            //{
-            //    return _context.Routes.Any(e => e.IdRoutes == id);
-            //}
+                            foreach (var j in i.Comments)
+                            {
+                                if (j.IdStage == i.IdStage)
+                                {
+                                    foreach (var q in p.Comments)
+                                    {
+                                        if (countJ == countQ)
+                                        {
+                                            if (q.Note != null && q.Note != "")
+                                            {
+                                                j.Note = q.Note;
+                                            }
+                                            if (q.DateNote != null)
+                                            {
+                                                j.DateNote = q.DateNote;
+                                            }
+                                            break;
+                                        }
+                                        countQ++;
+                                    }
+                                }
+                                countJ++;
+                            }
+                            break;
+                        }
+                        countP++;
+                    }
+                    countI++;
+                }
+            }
+            await _context.SaveChangesAsync();
+            return Ok(data);
         }
+    }
 }
