@@ -33,7 +33,7 @@ namespace RoutePlanner
                    {
                        options.RequireHttpsMetadata = false;
                        options.TokenValidationParameters = new TokenValidationParameters
-                       {                           
+                       {
                             ValidateIssuer = true,
                             ValidIssuer = AuthOptions.ISSUER,
                             ValidateAudience = true,
@@ -45,7 +45,6 @@ namespace RoutePlanner
                    });
 
             services.AddMvc();
-
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -60,15 +59,14 @@ namespace RoutePlanner
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
             app.UseAuthentication();
+            app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
             {
