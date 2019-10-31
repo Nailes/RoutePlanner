@@ -1,0 +1,137 @@
+.top-menu {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  height: 5rem;
+  margin: 4rem;
+
+  &__history {
+    width: 15%;
+    text-transform: capitalize;
+    background: white;
+    border-radius: 100px 15px 15px 100px;
+  }
+  &__new-map {
+    width: 75%;
+    background: #f2f2f2;
+    text-align: left;
+  } 
+  &__photo {
+    width: 10%;
+    background: white;
+    border: none;
+  } 
+}
+.add {
+    flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  margin: 0 4rem 4rem 4rem;
+  
+  &__input {
+    width: 75%;
+    padding: 0.5rem;
+    border-radius: 100px 15px 15px 100px;
+  } 
+  &__icon {
+    width: 10%;
+    padding: 0.5rem;
+    border: none;
+    background: white;
+  } 
+  &__add {
+    width: 15%;
+    background: #00b050;
+    border: 0.1rem solid white grey;
+    text-transform: capitalize;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: black;
+    border-radius: 15px 100px 100px 15px;
+  }   
+} 
+
+
+.list {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-bottom: 3rem; 
+
+  &__element {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    border-bottom: 0.1rem solid #00b050;
+    margin: 0 4rem 4rem 4rem;
+    height: 4rem;
+
+    &_burger {
+      width: 5%;
+      background: #f2f2f2;
+      margin-bottom: 1rem;
+    }
+
+    &_title {
+      width: 75%;
+      margin-bottom: 1rem;
+    }
+      
+    &_button-delete {
+      width: 5%;
+      background: white;
+      margin-bottom: 1rem;
+      border: none;
+    } 
+  }
+}
+
+.search {
+  background: #f2f2f2;
+  padding: 5rem;
+  border: 0.1rem solid black;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  &__input {
+    width: 60%;
+    height: 4rem;
+    border-radius: 100px 15px 15px 100px;
+  } 
+    
+  &__button-save {
+    height: 4rem;
+    background: #00b050;
+    border: 0.1rem solid grey white;
+    text-transform: capitalize;
+    padding: 1rem;
+    cursor: pointer;
+    color: black;
+  }
+    
+  &__button-print {
+    height: 4rem;
+    background: #00b050;
+    border: 0.1rem solid grey white;
+    text-transform: capitalize;
+    padding: 1rem;
+    cursor: pointer;
+    color: black;
+    border-radius: 15px 100px 100px 15px;
+  }  
+}
+  
+.footer {
+  background: #3f3f3f;
+  height: 10rem;
+  width: 100%;
+  top: 100%;
+} 
+  
+
+body {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}

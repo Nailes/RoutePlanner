@@ -1,0 +1,35 @@
+<body>
+  <form class="signin">
+    <div class="form-group">
+      <h1>Регистрация</h1>
+      <label for="option">Логин</label>
+      <input type="text" placeholder="Введите логин" 
+      class="form-control" name="name" [(ngModel)]="user.name" #name="ngModel" required>
+      <div [hidden]="name.valid || name.untouched" class="alert alert-danger">
+      Не указано имя
+      </div>
+      <br>
+      <label for="option">Email</label>
+      <input type="email" placeholder="Введите email" 
+      class="form-control" name="email" [(ngModel)]="user.email" #email="ngModel"
+      required email>
+      <div [hidden]="email.valid || email.untouched" class="alert alert-danger">
+      Некорректный email
+      </div>
+      <br>
+      <label for="option">Пароль</label>
+      <input type="password" placeholder="Введите пароль" 
+      class="form-control" name="password" [(ngModel)]="user.password" #password="ngModel" required>
+      <div [hidden]="password.valid || password.untouched" class="alert alert-danger">
+      Не указан пароль
+      </div>
+      <br>
+      <button [disabled]="name.invalid || email.invalid || password.invalid"
+      class="btn btn-outline-success" (click)="addUser(userName, userPassword, userEmail)">Зарегистрироваться</button>
+      <br>
+      <button name="login" routerLink="" type="button" class="btn
+      btn-link">Войти</button>
+    </div>
+    <div *ngFor="let user of users"></div>
+  </form>
+</body>

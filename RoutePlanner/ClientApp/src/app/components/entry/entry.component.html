@@ -1,0 +1,22 @@
+<body>
+  <div class="login">
+    <form>
+      <div class="form-group">
+        <h1>Вход</h1>
+        <label for="option">Логин</label>
+        <input type="text" id="option" placeholder="Введите логин" 
+        class="form-control">
+        <br>
+        <label for="option">Пароль</label>
+        <input type="password" id="option" placeholder="Введите пароль" 
+        class="form-control">
+        <br>
+        <button routerLink="/menu" type="button" class="btn
+        btn-outline-success">Войти</button>
+        <br>
+        <button routerLink="/signin" type="button" class="btn
+        btn-link" (submit)="enterSignin()">Зарегистрироваться</button>
+      </div>
+    </form>
+  </div>
+  </body>
